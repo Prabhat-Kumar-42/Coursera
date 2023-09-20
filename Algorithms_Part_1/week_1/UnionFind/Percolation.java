@@ -1,5 +1,8 @@
-import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
+
+import java.util.Scanner;
+
+import edu.princeton.cs.algs4.StdRandom;
 
 public class Percolation {
   
@@ -31,6 +34,7 @@ public class Percolation {
     }
     this.size = n+1;
     this.grid = new int[size][size];
+    this.unionFindObj= new WeightedQuickUnionUF((size)*(size));
     reset();
     // System.out.println("Constructed Grid with size " + size);
     // System.out.println("Constructed Union ojectwith size " + size*size);
@@ -42,8 +46,46 @@ public class Percolation {
       // return;
       throw new IllegalArgumentException();
     }
+    
+    boolean isFullFlag = false;
     grid[row][col] = OPEN;
     openSites++;
+    if(row == 1) {
+      isFullFlag = true;
+      unionFindObj.union(0, size*(row-1) + col );
+      System.out.println("root of 0 = " + unionFindObj.find(0));
+      System.out.println("grid[" + row + "][" + col + "] is " +
+                          unionFindObj.find(size*(row-1) + col ));
+    }
+    else if(row == size-1)
+    {
+      unionFindObj.union(size*size - 1, size*(row-1) + col);
+      // System.out.println("Assigned Parent, Parent is : " + 
+      //                    unionFindObj.find(size*(row-1) + col));
+    }
+    
+    // System.out.println("Checking Neighbours");
+    for(int i = 0; i < 4; i++) {
+      int neighourRow = row + yCordinates[i];
+      int neighourCol = col + xCordinates[i];
+       
+      if(neighourRow < 1 || neighourRow >= size || neighourCol < 1 || neighourCol >= size) {
+        continue;
+      }
+      if(isOpen(neighourRow, neighourCol)) {
+        // System.out.println("Merged neighbour and cell");
+        if(isFullFlag && !isFull(neighourRow, neighourCol)) {
+          unionFindObj.union(size*(row-1) + col, size*(neighourRow-1) + neighourCol);
+          System.out.println("Assigning current as neighbour parent");
+          System.out.println("current parent = " + unionFindObj.find(size*(row-1) + col));
+          System.out.println("Assigning current as neighbour parent");
+        } else {
+          unionFindObj.union(size*(neighourRow-1) + neighourCol, size*(row-1) + col);
+          System.out.println("Assigning neighbour as parent");
+        }
+        System.out.println("current parent = " + unionFindObj.find(size*(row-1) + col));
+      }
+    }
   }
 
   public boolean isOpen(int row, int col) {
@@ -70,54 +112,21 @@ public class Percolation {
   }
 
   public boolean percolates() {
-    reset();
-    this.unionFindObj= new WeightedQuickUnionUF((size)*(size));
+    return unionFindObj.find(0) == unionFindObj.find(size*size - 1);
+  }
+
+  public static void main(String[] args) {
     int row, col;
-    boolean isFullFlag;
-    while(unionFindObj.find(0) != unionFindObj.find(size*size - 1)) {
-      isFullFlag = false;
-      // System.out.println("Inside Row Col Assignment loop");
+    Scanner sc = new Scanner(System.in);
+    System.out.println("Enter size");
+    Percolation obj = new Percolation(sc.nextInt());
+    while(!obj.percolates())
+    {
       do {
-        row = StdRandom.uniformInt(1, size);
-        col = StdRandom.uniformInt(1, size);
-      }while(isOpen(row, col));
-      // System.out.println("Outside Row Col Assignment loop");
-
-      // System.out.println("Row is: " + row);
-      // System.out.println("Col is: " + col);
-
-      open(row, col);
-      if(row == 1) {
-        isFullFlag = true;
-        unionFindObj.union(0, size*(row-1) + col );
-        // System.out.println("Assigned Parent, Parent is : " + 
-        //                 unionFindObj.find(size*(row-1) + col));
-      }
-      else if(row == size-1)
-      {
-        unionFindObj.union(size*size - 1, size*(row-1) + col);
-        // System.out.println("Assigned Parent, Parent is : " + 
-        //                    unionFindObj.find(size*(row-1) + col));
-      }
-      
-      // System.out.println("Checking Neighbours");
-      for(int i = 0; i < 4; i++) {
-        int neighourRow = row + yCordinates[i];
-        int neighourCol = col + xCordinates[i];
-         
-        if(neighourRow < 1 || neighourRow >= size || neighourCol < 1 || neighourCol >= size) {
-          continue;
-        }
-        if(isOpen(neighourRow, neighourCol)) {
-          // System.out.println("Merged neighbour and cell");
-          if(isFullFlag) {
-            unionFindObj.union(size*(row-1) + col, size*(neighourRow-1) + neighourCol);
-          } else {
-            unionFindObj.union(size*(neighourRow-1) + neighourCol, size*(row-1) + col);
-          }
-        }
-      }
+        row = StdRandom.uniformInt(1, obj.size);
+        col = StdRandom.uniformInt(1, obj.size);
+      }while(obj.isOpen(row, col));
+      obj.open(row, col);
     }
-    return true;
   }
 }

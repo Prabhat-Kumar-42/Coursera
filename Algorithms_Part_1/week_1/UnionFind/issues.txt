@@ -6,4 +6,10 @@ Solved:
     Trials array values not updating after first loop cycle
 
 Needs To Be Solved:
-      
+  #0003
+    Other nodes can become the parent of 0.
+    (this can't happen since 0 top root node and represet other
+     nodes to be full when connected to it)
+
+Working on:
+  #0003 
