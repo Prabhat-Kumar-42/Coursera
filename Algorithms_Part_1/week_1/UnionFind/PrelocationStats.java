@@ -5,7 +5,7 @@ public class PrelocationStats {
   private int trials;
   private int size;
   private double[] trialsArray;
-  private Prelocation prelocationObj;
+  private Precolation prelocationObj;
   
   private void printTrialsArray() {
     System.out.println("trails array is : ");
@@ -15,7 +15,7 @@ public class PrelocationStats {
     System.out.println();
   }
   public PrelocationStats(int n, int trials) {
-    this.prelocationObj = new Prelocation(n);
+    this.prelocationObj = new Precolation(n);
     this.trials = trials;
     this.size = n; 
     this.trialsArray = new double[trials];
@@ -47,7 +47,7 @@ public class PrelocationStats {
                                                  Integer.parseInt(args[1]));
     for(int i = 0; i < obj.trials; i++) {
       obj.prelocationObj.prelocates();
-      int openSites = obj.prelocationObj.openSites;
+      int openSites = obj.prelocationObj.numberOfOpenSites();
       // System.out.println(openSites);
       obj.trialsArray[i] = ((double)openSites)/(double)(obj.size*obj.size); 
     }
