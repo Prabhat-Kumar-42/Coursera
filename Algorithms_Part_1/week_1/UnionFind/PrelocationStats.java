@@ -1,13 +1,19 @@
 import edu.princeton.cs.algs4.StdStats;
-import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class PrelocationStats {
   
-  public Prelocation prelocationObj;
-  public int trials;
-  public int size;
-  public double[] trialsArray;
-
+  private int trials;
+  private int size;
+  private double[] trialsArray;
+  private Prelocation prelocationObj;
+  
+  private void printTrialsArray() {
+    System.out.println("trails array is : ");
+    for(int i = 0; i < trials; i++) {
+      System.out.print(trialsArray[i] + " ");
+    }
+    System.out.println();
+  }
   public PrelocationStats(int n, int trials) {
     this.prelocationObj = new Prelocation(n);
     this.trials = trials;
@@ -16,27 +22,41 @@ public class PrelocationStats {
   }
   
   public double mean() {
-
+    return StdStats.mean(trialsArray);
   }
 
   public double stddev() {
-
+    return StdStats.stddev(trialsArray);
   }
 
   public double confidenceLo() {
-
+    return mean() - (1.96*stddev()/Math.sqrt(trials));
   }
   
   public double confidenceHi() {
+    return mean() + (1.96*stddev()/Math.sqrt(trials));
 
   }
 
   public static void main(String[] args) {
-    PrelocationStats obj = new PrelocationStats( args[0], args[1]);
+
+    System.out.println("size is " + Integer.parseInt(args[0]));
+    System.out.println("trail is " + Integer.parseInt(args[1]));
+
+    PrelocationStats obj = new PrelocationStats( Integer.parseInt(args[0]),
+                                                 Integer.parseInt(args[1]));
     for(int i = 0; i < obj.trials; i++) {
-      while(!obj.prelocationObj.prelocates());
-      int openSites = obj.prelocationObj.numberOfOpenSites();
-       obj.trialsArray[i] = openSites/(obj.size*obj.size); 
+      obj.prelocationObj.prelocates();
+      int openSites = obj.prelocationObj.openSites;
+      // System.out.println(openSites);
+      obj.trialsArray[i] = ((double)openSites)/(double)(obj.size*obj.size); 
     }
+
+    // obj.printTrialsArray();
+    System.out.println("mean                    = " + obj.mean());
+    System.out.println("stddev                  = " + obj.stddev());
+    System.out.println("95% confidence interval = [" + obj.confidenceLo() + ", " + 
+                       obj.confidenceHi() + "]");
+
   }
 }
