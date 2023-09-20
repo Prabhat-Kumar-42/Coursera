@@ -1,11 +1,11 @@
 import edu.princeton.cs.algs4.StdStats;
 
-public class PrecolationStats {
+public class PercolationStats {
   
   private int trials;
   private int size;
   private double[] trialsArray;
-  private Precolation precolationObj;
+  private Percolation percolationObj;
   
   private void printTrialsArray() {
     System.out.println("trails array is : ");
@@ -14,8 +14,8 @@ public class PrecolationStats {
     }
     System.out.println();
   }
-  public PrecolationStats(int n, int trials) {
-    this.precolationObj = new Precolation(n);
+  public PercolationStats(int n, int trials) {
+    this.percolationObj = new Percolation(n);
     this.trials = trials;
     this.size = n; 
     this.trialsArray = new double[trials];
@@ -43,11 +43,11 @@ public class PrecolationStats {
     // System.out.println("size is " + Integer.parseInt(args[0]));
     // System.out.println("trail is " + Integer.parseInt(args[1]));
 
-    PrecolationStats obj = new PrecolationStats( Integer.parseInt(args[0]),
+    PercolationStats obj = new PercolationStats( Integer.parseInt(args[0]),
                                                  Integer.parseInt(args[1]));
     for(int i = 0; i < obj.trials; i++) {
-      obj.precolationObj.precolates();
-      int openSites = obj.precolationObj.numberOfOpenSites();
+      obj.percolationObj.percolates();
+      int openSites = obj.percolationObj.numberOfOpenSites();
       // System.out.println(openSites);
       obj.trialsArray[i] = ((double)openSites)/(double)(obj.size*obj.size); 
     }

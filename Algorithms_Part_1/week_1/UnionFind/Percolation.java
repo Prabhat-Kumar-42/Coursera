@@ -1,7 +1,7 @@
 import edu.princeton.cs.algs4.StdRandom;
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
-public class Precolation {
+public class Percolation {
   
   private WeightedQuickUnionUF unionFindObj;
   private int [][]grid;
@@ -23,7 +23,7 @@ public class Precolation {
     }
   }
 
-  public Precolation(int n) {
+  public Percolation(int n) {
 
     if( n < 1) {
       // return;
@@ -69,7 +69,7 @@ public class Precolation {
     return openSites;
   }
 
-  public boolean precolates() {
+  public boolean percolates() {
     reset();
     this.unionFindObj= new WeightedQuickUnionUF((size)*(size));
     int row, col;
