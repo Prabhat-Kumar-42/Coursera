@@ -23,7 +23,7 @@ public class Precolation {
     }
   }
 
-  public Prelocation(int n) {
+  public Precolation(int n) {
 
     if( n < 1) {
       // return;
