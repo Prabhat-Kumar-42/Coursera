@@ -8,7 +8,7 @@ public class Precolation {
   private int size;
   private int CLOSE = 0;
   private int OPEN = 1;
-  public int openSites = 0;
+  private int openSites = 0;
   private int xCordinates[] = {-1, 0, 1, 0 };
   private int yCordinates[] = {0, 1, 0, -1 }; 
   
