@@ -40,8 +40,8 @@ public class PrecolationStats {
 
   public static void main(String[] args) {
 
-    System.out.println("size is " + Integer.parseInt(args[0]));
-    System.out.println("trail is " + Integer.parseInt(args[1]));
+    // System.out.println("size is " + Integer.parseInt(args[0]));
+    // System.out.println("trail is " + Integer.parseInt(args[1]));
 
     PrecolationStats obj = new PrecolationStats( Integer.parseInt(args[0]),
                                                  Integer.parseInt(args[1]));
