@@ -1,0 +1,9 @@
+Solved:
+
+  #0001
+    mean, stddev, confidenceLo, confidenceHi having NaN
+  #0002
+    Trials array values not updating after first loop cycle
+
+Needs To Be Solved:
+      
