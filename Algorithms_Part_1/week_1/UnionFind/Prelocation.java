@@ -4,60 +4,65 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 public class Prelocation {
   
   private WeightedQuickUnionUF unionFindObj;
-  public int [][]grid;
+  private int [][]grid;
   private int size;
-  public Const CLOSE = 0;
-  public Const OPEN = 1;
-  public Const FULL = 2;
-  private int openSites = 0;
-  public int xCordinates[] = [-1, 0, 1, 0 ];
-  public int xCordinates[] = [0, 1, 0, -1]; 
-
-  public Prelocation(int n) {
-
-    if( n < 1)
-    {
-      throw IllegalArgumentException;
-    }
-    this.size = n;
-    this.grid = new int[n][n];
-    this.unionFindObj= new WeightedQuickUnionUF((n+1)*(n+1));
-    for(int i = 0; i < n; i++) {
-      for(int j = 0; j < n; j++) {
+  private int CLOSE = 0;
+  private int OPEN = 1;
+  public int openSites = 0;
+  private int xCordinates[] = {-1, 0, 1, 0 };
+  private int yCordinates[] = {0, 1, 0, -1 }; 
+  
+  private void reset()
+  {
+    // System.out.println("Resetting grids");
+    this.openSites = 0;
+    for(int i = 0; i < size; i++) {
+      for(int j = 0; j < size; j++) {
         grid[i][j] = CLOSE;
       }
     }
   }
 
+  public Prelocation(int n) {
+
+    if( n < 1) {
+      // return;
+      throw new IllegalArgumentException();
+    }
+    this.size = n+1;
+    this.grid = new int[size][size];
+    reset();
+    // System.out.println("Constructed Grid with size " + size);
+    // System.out.println("Constructed Union ojectwith size " + size*size);
+  }
+
   public void open(int row, int col) {
-
-    if( row < 1 || col < 1 || row >= size || col >= size)
-    {
-      throw IllegalArgumentException;
+    // System.out.println("Opening grid[" + row +"][" + col + "]");
+    if( row < 1 || col < 1 || row >= size || col >= size) {
+      // return;
+      throw new IllegalArgumentException();
     }
-
-    if(grid[row][col] != FULL) {
-      grid[row][col] = OPEN;
-    }
+    grid[row][col] = OPEN;
+    openSites++;
   }
 
-  public void isOpen(int row, int col) {
- 
-    if( row < 1 || col < 1 || row >= size || col >= size)
-    {
-      throw IllegalArgumentException;
+  public boolean isOpen(int row, int col) {
+    // System.out.println("Check if Open grid[" + row +"][" + col + "] = "); 
+    if( row < 1 || col < 1 || row >= size || col >= size) {
+      // return false;
+      throw new IllegalArgumentException();
     }
-
-   return grid[row][col] == OPEN;
+    // System.out.println((grid[row][col] == OPEN));
+    return grid[row][col] == OPEN;
   }
 
-  public booleanisFull(int row, int col) {
- 
-    if( row < 1 || col < 1 || row >= size || col >= size)
-    {  
-      throw IllegalArgumentException;
+  public boolean isFull(int row, int col) {
+    // System.out.println("Checking if full grid[" + row +"][" + col + "]");
+    if( row < 1 || col < 1 || row >= size || col >= size) {  
+      // return false;
+      throw new IllegalArgumentException();
     }
-    return grid[row][col] == FULL;
+    return unionFindObj.find((row-1)*size + col) == 0;
   }
 
   public int numberOfOpenSites() {
@@ -65,34 +70,54 @@ public class Prelocation {
   }
 
   public boolean prelocates() {
+    reset();
+    this.unionFindObj= new WeightedQuickUnionUF((size)*(size));
     int row, col;
-    while(unionFindObj.find(0) != unionFindObj(size)) {
+    boolean isFullFlag;
+    while(unionFindObj.find(0) != unionFindObj.find(size*size - 1)) {
+      isFullFlag = false;
+      // System.out.println("Inside Row Col Assignment loop");
       do {
-        row = uniformInt(1, size);
-        col = uniformInt(1, size);
+        row = StdRandom.uniformInt(1, size);
+        col = StdRandom.uniformInt(1, size);
       }while(isOpen(row, col));
+      // System.out.println("Outside Row Col Assignment loop");
+
+      // System.out.println("Row is: " + row);
+      // System.out.println("Col is: " + col);
 
       open(row, col);
-      if(row == 1)
+      if(row == 1) {
+        isFullFlag = true;
+        unionFindObj.union(0, size*(row-1) + col );
+        // System.out.println("Assigned Parent, Parent is : " + 
+        //                 unionFindObj.find(size*(row-1) + col));
+      }
+      else if(row == size-1)
       {
-        grid[row][col] = FULL;
+        unionFindObj.union(size*size - 1, size*(row-1) + col);
+        // System.out.println("Assigned Parent, Parent is : " + 
+        //                    unionFindObj.find(size*(row-1) + col));
       }
       
+      // System.out.println("Checking Neighbours");
       for(int i = 0; i < 4; i++) {
         int neighourRow = row + yCordinates[i];
         int neighourCol = col + xCordinates[i];
-        
-        if(isFull(neighourRow, neighourCol))
-        {
-          grid[row][col] = FULL; 
+         
+        if(neighourRow < 1 || neighourRow >= size || neighourCol < 1 || neighourCol >= size) {
+          continue;
         }
-
-        if(isOpen(neighourRow, neighourCol) || isFull(neighourRow, neighourCol)) {
+        if(isOpen(neighourRow, neighourCol)) {
+          // System.out.println("Merged neighbour and cell");
+          if(isFullFlag) {
+            unionFindObj.union(size*(row-1) + col, size*(neighourRow-1) + neighourCol);
+          } else {
+            unionFindObj.union(size*(neighourRow-1) + neighourCol, size*(row-1) + col);
+          }
         }
       }
-
-
     }
+    return true;
   }
-
 }
