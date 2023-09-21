@@ -8,8 +8,11 @@ Solved:
 Needs To Be Solved:
   #0003
     Other nodes can become the parent of 0.
-    (this can't happen since 0 top root node and represet other
+    (this can't happen since 0 is top root node and represet other
      nodes to be full when connected to it)
+    This bug is occuring due to rank difference between other root nodes,
+    if any root has higher rank than top and bottom root i.e. 0 and size*size-1,
+    it can become the root of them.
 
 Working on:
   #0003 
