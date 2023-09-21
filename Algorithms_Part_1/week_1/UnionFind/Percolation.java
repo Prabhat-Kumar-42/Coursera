@@ -46,25 +46,28 @@ public class Percolation {
       // return;
       throw new IllegalArgumentException();
     }
-    
+    System.out.println("Opening grid[" + row + "][" + col +"]"); 
     boolean isFullFlag = false;
     grid[row][col] = OPEN;
     openSites++;
     if(row == 1) {
       isFullFlag = true;
       unionFindObj.union(0, size*(row-1) + col );
-      System.out.println("root of 0 = " + unionFindObj.find(0));
-      System.out.println("grid[" + row + "][" + col + "] is " +
-                          unionFindObj.find(size*(row-1) + col ));
+      System.out.println("row = 1, Assigned 0 as parent, Parent is : " + 
+                          unionFindObj.find(size*(row-1)+col));
     }
     else if(row == size-1)
     {
       unionFindObj.union(size*size - 1, size*(row-1) + col);
+      System.out.println("row = size-1, " + (size - 1)+ " Assigned " + 
+                          (size*size-1) + " size*size-1 as parent, Parent is : " + 
+                          unionFindObj.find(size*(row-1)+col));
       // System.out.println("Assigned Parent, Parent is : " + 
       //                    unionFindObj.find(size*(row-1) + col));
     }
-    
-    // System.out.println("Checking Neighbours");
+    System.out.println("Current Parent of grid[" + row + "][" + col + "] = "
+                        + unionFindObj.find(size*(row-1) + col)); 
+    System.out.println("Neighbours");
     for(int i = 0; i < 4; i++) {
       int neighourRow = row + yCordinates[i];
       int neighourCol = col + xCordinates[i];
@@ -73,7 +76,9 @@ public class Percolation {
         continue;
       }
       if(isOpen(neighourRow, neighourCol)) {
-        // System.out.println("Merged neighbour and cell");
+         System.out.println("Checking isFull of neighbour[" + neighourRow + "]["+
+                            neighourCol + "] = " + isFull(neighourRow, neighourCol));
+          
         if(isFullFlag && !isFull(neighourRow, neighourCol)) {
           unionFindObj.union(size*(row-1) + col, size*(neighourRow-1) + neighourCol);
           System.out.println("Assigning current as neighbour parent");
@@ -86,6 +91,7 @@ public class Percolation {
         System.out.println("current parent = " + unionFindObj.find(size*(row-1) + col));
       }
     }
+    System.out.println("Neighbours end");
   }
 
   public boolean isOpen(int row, int col) {
@@ -95,6 +101,8 @@ public class Percolation {
       throw new IllegalArgumentException();
     }
     // System.out.println((grid[row][col] == OPEN));
+    System.out.println("Checking isOpen for grid[" + row + "][" + col +"] is " +
+                        (grid[row][col] == OPEN));
     return grid[row][col] == OPEN;
   }
 
@@ -104,6 +112,9 @@ public class Percolation {
       // return false;
       throw new IllegalArgumentException();
     }
+
+    System.out.println("In isFull, parent of grid[" + row + "][" + col + "] is " + 
+                        unionFindObj.find(size*(row-1) + col));
     return unionFindObj.find((row-1)*size + col) == 0;
   }
 
@@ -112,6 +123,10 @@ public class Percolation {
   }
 
   public boolean percolates() {
+    if(unionFindObj.find(0) == unionFindObj.find(size*size - 1)) {
+      System.out.println("Parent of 0 is " + unionFindObj.find(0));
+      System.out.println("Parent of " + (size*size-1) + " is " + unionFindObj.find(size*size-1));
+    }
     return unionFindObj.find(0) == unionFindObj.find(size*size - 1);
   }
 
@@ -128,5 +143,6 @@ public class Percolation {
       }while(obj.isOpen(row, col));
       obj.open(row, col);
     }
+    System.out.println(obj.percolates());
   }
 }
