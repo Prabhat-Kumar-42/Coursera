@@ -4,8 +4,6 @@ Solved:
     mean, stddev, confidenceLo, confidenceHi having NaN
   #0002
     Trials array values not updating after first loop cycle
-
-Needs To Be Solved:
   #0003
     Other nodes can become the parent of 0.
     (this can't happen since 0 is top root node and represet other
@@ -14,5 +12,7 @@ Needs To Be Solved:
     if any root has higher rank than top and bottom root i.e. 0 and size*size-1,
     it can become the root of them.
 
+
+Needs To Be Solved:
+ 
 Working on:
-  #0003 
